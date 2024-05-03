@@ -17,8 +17,10 @@ class text_to_speech extends StatefulWidget{
 }
 
 class _text_to_speechState extends State<text_to_speech> {
+  Key richTextKey = UniqueKey();
   String Extractedtext="";
   List<String> lines=[];
+  List<TextSpan> Textspanlines=[];
 
   var Texttospeech;
   int highlightedLine = 0;
@@ -29,11 +31,14 @@ class _text_to_speechState extends State<text_to_speech> {
     Extractedtext=extractedtext;
     Texttospeech=TextEditingController(text: Extractedtext);
     lines = Texttospeech.text.split('.');
+    updateTextSegments(0);
   }
 
 
   int count=0;
   bool x=true;
+
+
   @override
   Widget build(BuildContext context) {
 
@@ -91,22 +96,19 @@ class _text_to_speechState extends State<text_to_speech> {
                             topEnd: Radius.circular(20)
                         )
                     ),
-                    child: TextFormField(
-                      controller:Texttospeech ,
-                      maxLines: null,
-                      decoration: InputDecoration(
-                        border: UnderlineInputBorder(
-                          borderSide: BorderSide.none,
-                        ),
-                        prefixIcon: Container(
-                          width: double.infinity,
-                          padding: EdgeInsets.symmetric(vertical: 4.0),
-                          child: _buildHighlightedLine(),
+                    child: SingleChildScrollView(
+                      child: RichText(
+                        key: richTextKey,
+                        text: TextSpan(
+
+                          children: Textspanlines
+                      
                         ),
                       ),
+                    )
 
 
-                    )),
+                ),
                 Container(
                     width: double.infinity,
                     height: MediaQuery.of(context).size.height*.1,
@@ -131,12 +133,13 @@ class _text_to_speechState extends State<text_to_speech> {
 
                           MaterialButton(
                             onPressed: (){
-                              //  print("safafaffaffafa");
+
                               highlightedLine--;
+                              updateTextSegments(highlightedLine);
                               if(highlightedLine<=0)
-                                {
-                                  highlightedLine=1;
-                                }
+                              {
+                                highlightedLine=1;
+                              }
 
                               setState(() {});
 
@@ -151,14 +154,17 @@ class _text_to_speechState extends State<text_to_speech> {
                               child: IconButton(
                                   onPressed: () async {
 
+
                                     if(x==true)
                                     {
                                       x=false;
 
 
-                                     // for(int i=highlightedLine;highlightedLine<lines.length+1;i++)
+                                      // for(int i=highlightedLine;highlightedLine<lines.length+1;i++)
                                       while(highlightedLine<=lines.length)
                                       {
+
+
                                         cheeck=highlightedLine;
                                         if(count==1)
                                         {
@@ -167,20 +173,23 @@ class _text_to_speechState extends State<text_to_speech> {
                                         else
                                         {
                                           await Future.delayed(Duration(seconds: 1));
+
                                           highlightedLine++;
+
+                                          updateTextSegments(highlightedLine);
                                           setState(() {
 
-
-                                            print("safafa");
-                                            print(highlightedLine);
                                           });
                                         }
                                       }
                                       if(highlightedLine==lines.length+1)
                                       {
-                                        highlightedLine=1;
+                                        highlightedLine=0;
                                         x=true;
-                                        setState(() {});
+
+                                        updateTextSegments(highlightedLine);
+                                        setState(() {
+                                        });
                                       }
 
                                       count=0;
@@ -190,11 +199,12 @@ class _text_to_speechState extends State<text_to_speech> {
                                     else
                                     {
 
+
                                       setState(()
                                       {
                                         x=true;
                                         count=1;
-                                        print("mayar");
+
                                       });
 
                                     }
@@ -207,9 +217,10 @@ class _text_to_speechState extends State<text_to_speech> {
                           MaterialButton(
                             onPressed: (){
                               highlightedLine++;
+                              updateTextSegments(highlightedLine);
                               if(highlightedLine>=lines.length)
                               {
-                                highlightedLine=1;
+                                highlightedLine=0;
                                 x=true;
                                 setState(() {});
                               }
@@ -245,34 +256,39 @@ class _text_to_speechState extends State<text_to_speech> {
       ),
 
     );
+
   }
-  Widget _buildHighlightedLine() {
+  void updateTextSegments(int highligt) {
+    Textspanlines.clear();
 
-    //print(lines[0]);
+    //print("Hosaaaaaaaa$highligt");
 
-    return ListView.builder(
+    for (int i = 0; i < lines.length; i++) {
+      if (i == highligt) {
 
-
-      itemCount: lines.length,
-      itemBuilder: (context, index) {
-        if (index == highlightedLine - 1) {
-          return Container(
-
-            // Customize the highlight color
-            child: Text(
-              lines[index],
-
-              style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Colors.red
-              ),
+        Textspanlines.add(
+          TextSpan(
+            text: lines[i],
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+              color: Colors.blue, // Highlighted text color
             ),
-          );
-        } else {
-          return Text(lines[index]);
-        }
-      },
-    );
+          ),
+        );
+      } else {
+        Textspanlines.add(
+          TextSpan(
+            text: lines[i],
+            style: TextStyle(
+              color: Colors.black, // Default text color
+            ),
+          ),
+        );
+
+      }
+
+    }
+    richTextKey = UniqueKey();
 
   }
 
