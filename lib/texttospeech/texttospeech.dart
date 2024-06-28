@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:graduation_project/profile/profile.dart';
+import 'package:flutter_tts/flutter_tts.dart';
 
 class text_to_speech extends StatefulWidget{
   String Extractedtext="";
@@ -17,6 +18,9 @@ class text_to_speech extends StatefulWidget{
 }
 
 class _text_to_speechState extends State<text_to_speech> {
+  FlutterTts Tss=FlutterTts();
+
+
   Key richTextKey = UniqueKey();
   String Extractedtext="";
   List<String> lines=[];
@@ -101,8 +105,8 @@ class _text_to_speechState extends State<text_to_speech> {
                         key: richTextKey,
                         text: TextSpan(
 
-                          children: Textspanlines
-                      
+                            children: Textspanlines
+
                         ),
                       ),
                     )
@@ -153,7 +157,8 @@ class _text_to_speechState extends State<text_to_speech> {
                               backgroundColor: Colors.black,
                               child: IconButton(
                                   onPressed: () async {
-
+                                    setState(() {
+                                    });
 
                                     if(x==true)
                                     {
@@ -163,7 +168,16 @@ class _text_to_speechState extends State<text_to_speech> {
                                       // for(int i=highlightedLine;highlightedLine<lines.length+1;i++)
                                       while(highlightedLine<=lines.length)
                                       {
+                                        await Tss.setLanguage('en-US');
+                                        await Tss.speak(lines[highlightedLine]).then((value){
+                                          print("ss");
+                                          print(value);
 
+                                        });
+
+                                         // Adjust volume
+
+                                        await Future.delayed(Duration(seconds: 20));
 
                                         cheeck=highlightedLine;
                                         if(count==1)
@@ -172,7 +186,7 @@ class _text_to_speechState extends State<text_to_speech> {
                                         }
                                         else
                                         {
-                                          await Future.delayed(Duration(seconds: 1));
+                                          //  await Future.delayed(Duration(seconds: 5));
 
                                           highlightedLine++;
 
@@ -292,4 +306,27 @@ class _text_to_speechState extends State<text_to_speech> {
 
   }
 
+  @override
+  void initState() {
+    super.initState();
+
+    Inittts();
+
+  }
+  void Inittts()async
+  {
+    Tss.getVoices.then((data){
+      try{
+        List<Map> voices=List<Map>.from(data);
+        print("safffffffffffffffffffffff");
+        print(voices);
+      }
+      catch(e)
+      {
+        print("mmmmmmmmmmm");
+        print(e);
+      }
+    });
+
+    }
 }

@@ -10,9 +10,13 @@ class sumarize extends StatefulWidget{
 }
 
 class _sumarizeState extends State<sumarize> {
+  String x="Summrize";
+  final TextEditingController texttController = TextEditingController();
   @override
   Widget build(BuildContext context) {
-    final TextEditingController texttController = TextEditingController();
+
+    //String tt="A 38-year-old woman in the US, who was apprehended twice for allegedly trying to jump the White House fence last week, has been arrested for scaling a fence at the Treasury Building.Marci Anderson Wahl of Everett, Washington, was arrested after an alarm sounded at about 2:15 am yesterday when she scaled a fence at the Treasury Building, next to the White House. Police said Wahl has told them she was there to speak to US President Donald Trump, the CNN reported. She was charged with unlawful entry and contempt of court. Wahl was first arrested on March 21 last week for trying to jump the White House fence.Once in custody, it was determined that Wahl had been issued a stay away order for the White House complex after the incident. On March 21, officers saw Wahl walking and staring at the White House complex before discovering she had jumped a fence on the south side but got stuck. Officers found her hanging from the inside of the fence by her shoelaces, which were caught on top of the fence, according to a police report. She was re-arrested on March 24 after officers saw her near Lafayette Park. She was released on her own recognisance after a Saturday court appearance. In the incident, Wahl was charged with contempt of court in violation of a stay away order. She pleaded not guilty last Saturday and was again released on her ownrecognisance.";
+
     // TODO: implement build
     return Padding(
       padding: EdgeInsets.symmetric(
@@ -21,7 +25,7 @@ class _sumarizeState extends State<sumarize> {
       ),
       child: SingleChildScrollView(
         child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
               "Summrization",
@@ -47,7 +51,7 @@ class _sumarizeState extends State<sumarize> {
                   child: TextFormField(
                     controller: texttController,
                     keyboardType: TextInputType.text,
-                    maxLines: null,
+                     maxLines: null,
                     decoration: InputDecoration(
                       hintText: "Insert text",
                       filled: true,
@@ -107,12 +111,50 @@ class _sumarizeState extends State<sumarize> {
                 color: Color(0xFFD9D9D9),
 
               ),
-              child: Text("Summrize."),
+              child: Text(x),
 
             ),
+            SizedBox(
+              height: MediaQuery.of(context).size.height * 0.05,
+            ),
+            Container(
+              padding: EdgeInsetsDirectional.only(
+
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadiusDirectional.all(Radius.circular(20)),
+                color: Colors.green,
+              ),
+
+              child: MaterialButton(onPressed: ()async{
+                   print(texttController);
+                 await summarizeText(texttController.text).then((value){
+                   x=value;
+                   print(x);
+                   x=value;
+                   setState(() {
+
+                   });
+
+                 });
+
+
+
+
+              },
+                child: Text("Summrization",
+                  style: TextStyle(
+                      color: Colors.white
+                  ),
+
+                ),
+              ),
+            )
+
           ],
         ),
       ),
     );
+    x="Summrize";
   }
 }
