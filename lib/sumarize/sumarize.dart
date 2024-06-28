@@ -157,4 +157,7 @@ class _sumarizeState extends State<sumarize> {
     );
     x="Summrize";
   }
+  String cleanText(String text) {
+    return text;
+  }
 }

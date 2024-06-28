@@ -6,6 +6,7 @@ import 'package:flutter_tts/flutter_tts.dart';
 
 class text_to_speech extends StatefulWidget{
   String Extractedtext="";
+  String Textclean="";
 
   text_to_speech(String value)
   {
@@ -32,7 +33,7 @@ class _text_to_speechState extends State<text_to_speech> {
 
   _text_to_speechState(String extractedtext)
   {
-    Extractedtext=extractedtext;
+    Extractedtext=cleanText(extractedtext);
     Texttospeech=TextEditingController(text: Extractedtext);
     lines = Texttospeech.text.split('.');
     updateTextSegments(0);
@@ -136,10 +137,16 @@ class _text_to_speechState extends State<text_to_speech> {
                           SizedBox(width:MediaQuery.of(context).size.width*.06),
 
                           MaterialButton(
-                            onPressed: (){
+                            onPressed: ()async{
 
                               highlightedLine--;
                               updateTextSegments(highlightedLine);
+                              await Tss.setLanguage('en-US');
+                              await Tss.speak(lines[highlightedLine]).then((value){
+                                print("ss");
+                                print(value);
+
+                              });
                               if(highlightedLine<=0)
                               {
                                 highlightedLine=1;
@@ -157,6 +164,7 @@ class _text_to_speechState extends State<text_to_speech> {
                               backgroundColor: Colors.black,
                               child: IconButton(
                                   onPressed: () async {
+                                    print(lines.length);
                                     setState(() {
                                     });
 
@@ -166,8 +174,11 @@ class _text_to_speechState extends State<text_to_speech> {
 
 
                                       // for(int i=highlightedLine;highlightedLine<lines.length+1;i++)
-                                      while(highlightedLine<=lines.length)
+
+                                      while(highlightedLine<=lines.length-1)
                                       {
+
+                                        print(highlightedLine);
                                         await Tss.setLanguage('en-US');
                                         await Tss.speak(lines[highlightedLine]).then((value){
                                           print("ss");
@@ -196,8 +207,12 @@ class _text_to_speechState extends State<text_to_speech> {
                                           });
                                         }
                                       }
-                                      if(highlightedLine==lines.length+1)
+                                      print("khale");
+                                      print(highlightedLine);
+                                      print(lines.length);
+                                      if(highlightedLine==lines.length)
                                       {
+                                        print("zzzzzzzzzzzz");
                                         highlightedLine=0;
                                         x=true;
 
@@ -229,9 +244,15 @@ class _text_to_speechState extends State<text_to_speech> {
                                   }, icon: Icon(x==true?Icons.play_arrow:Icons.pause,color: Colors.white,size: MediaQuery.of(context).size.width*.1,)
                               )),
                           MaterialButton(
-                            onPressed: (){
+                            onPressed: ()async{
                               highlightedLine++;
                               updateTextSegments(highlightedLine);
+                              await Tss.setLanguage('en-US');
+                              await Tss.speak(lines[highlightedLine]).then((value){
+                                print("ss");
+                                print(value);
+
+                              });
                               if(highlightedLine>=lines.length)
                               {
                                 highlightedLine=0;
@@ -329,4 +350,9 @@ class _text_to_speechState extends State<text_to_speech> {
     });
 
     }
+  String cleanText(String text) {
+    return text.replaceAll(RegExp(r'\s+'), ' ').trim();
+  }
+
+
 }
