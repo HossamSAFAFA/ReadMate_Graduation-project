@@ -1,3 +1,4 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:translator/translator.dart';
@@ -38,7 +39,7 @@ class _TranslateWidgetState extends State<TranslateWidget> {
   }
 
   final GoogleTranslator _translator = GoogleTranslator();
-
+  bool isTranslated = true;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -50,7 +51,7 @@ class _TranslateWidgetState extends State<TranslateWidget> {
         child: SingleChildScrollView(
           child: Container(
             padding: EdgeInsetsDirectional.only(
-              top: MediaQuery.of(context).size.height*.03
+                top: MediaQuery.of(context).size.height*.03
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -67,18 +68,18 @@ class _TranslateWidgetState extends State<TranslateWidget> {
                 ),
                 Container(
                   padding: EdgeInsetsDirectional.only(
-                    start: MediaQuery.of(context).size.width*.07
+                      start: MediaQuery.of(context).size.width*.07
                   ),
                   child: Row(
                     children: [
                       Text("Auto",
-                      style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05),
+                        style: TextStyle(fontSize: MediaQuery.of(context).size.width*0.05),
                       ),
                       SizedBox(
                         width:  MediaQuery.of(context).size.width*.08,
                       ),
                       Container(
-                        height: MediaQuery.of(context).size.height*.07,
+                          height: MediaQuery.of(context).size.height*.07,
                           child: Image.asset("assets/images/arrow.png")
                       ),
                       SizedBox(
@@ -94,7 +95,7 @@ class _TranslateWidgetState extends State<TranslateWidget> {
                         child: DropdownButton<String>(
                           icon: Container(
                             padding: EdgeInsetsDirectional.only(
-                               // start: MediaQuery.of(context).size.width*.2
+                              // start: MediaQuery.of(context).size.width*.2
                             ),
                             child: Container(
 
@@ -162,21 +163,6 @@ class _TranslateWidgetState extends State<TranslateWidget> {
                             borderSide: BorderSide(color: Color(0xFFD9D9D9)),
                           ),
                         ),
-                        // onChanged: (value) {
-                        //   if (selectedLanguage == 'Arabic') {
-                        //     code = "ar";
-                        //   } else if (selectedLanguage == 'German') {
-                        //     code = "de";
-                        //   } else if (selectedLanguage == 'Italian') {
-                        //     code = "it";
-                        //   } else if (selectedLanguage == 'English') {
-                        //     code = "en";
-                        //   } else {
-                        //     code = "es";
-                        //   }
-                        //   // Call the translate function when the button is pressed
-                        //   translate(code, value);
-                        // },
                       ),
                     ),
                     IconButton( icon: Icon(Icons.volume_up),onPressed: (){
@@ -199,7 +185,7 @@ class _TranslateWidgetState extends State<TranslateWidget> {
                     top: MediaQuery.of(context).size.height*.02,
                   ),
                   width: double.infinity,
-                  height: MediaQuery.of(context).size.height * 0.3,
+                  height: MediaQuery.of(context).size.height * 0.26,
                   decoration: BoxDecoration(
                     borderRadius: BorderRadiusDirectional.only(
                       bottomStart: Radius.circular(20),
@@ -213,48 +199,59 @@ class _TranslateWidgetState extends State<TranslateWidget> {
                   ),
                   child: SingleChildScrollView(child:
                   Container(
-                    padding: EdgeInsetsDirectional.only(
-                      start: MediaQuery.of(context).size.width*.01,
-                      end: MediaQuery.of(context).size.width*.01,
+                      padding: EdgeInsetsDirectional.only(
+                        start: MediaQuery.of(context).size.width*.01,
+                        end: MediaQuery.of(context).size.width*.01,
 
-                    ),
+                      ),
                       child: Text(translatedTextt))),
 
                 ),
                 SizedBox(
                   height: MediaQuery.of(context).size.height * 0.03,
                 ),
-                Container(
-                  padding: EdgeInsetsDirectional.only(
+                ConditionalBuilder(
+                  condition: isTranslated,
+                  builder: (context){return Container(
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                        color: Color(0xFF40B42E),
+                        borderRadius: BorderRadius.circular(20.0)),
+                    child: MaterialButton(
+                      onPressed: ()async{
+                        setState(() {
+                          isTranslated=!isTranslated;
+                        });
+                        if (selectedLanguage == 'Arabic') {
+                          code = "ar";
+                        } else if (selectedLanguage == 'German') {
+                          code = "de";
+                        } else if (selectedLanguage == 'Italian') {
+                          code = "it";
+                        } else if (selectedLanguage == 'English') {
+                          code = "en";
+                        } else {
+                          code = "es";
+                        }
+                        // Call the translate function when the button is pressed
+                        await translate(code, textController.text);
+                        setState(() {
+                          isTranslated=!isTranslated;
+                        });
+                      },
+                      child: Text("Translate",
+                        style: TextStyle(
+                            color: Colors.white
+                        ),
 
-                  ),
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadiusDirectional.all(Radius.circular(20)),
-                    color: Colors.green,
-                  ),
-
-                  child: MaterialButton(onPressed: (){
-                    if (selectedLanguage == 'Arabic') {
-                      code = "ar";
-                    } else if (selectedLanguage == 'German') {
-                      code = "de";
-                    } else if (selectedLanguage == 'Italian') {
-                      code = "it";
-                    } else if (selectedLanguage == 'English') {
-                      code = "en";
-                    } else {
-                      code = "es";
-                    }
-                    // Call the translate function when the button is pressed
-                    translate(code, textController.text);
-                  },
-                    child: Text("Translate",
-                    style: TextStyle(
-                      color: Colors.white
+                      ),
                     ),
-
+                  );},
+                  fallback: (context) => Center(child: CircularProgressIndicator(
+                    valueColor: AlwaysStoppedAnimation<Color>(
+                      Colors.green,
                     ),
-                  ),
+                  )),
                 )
 
               ],

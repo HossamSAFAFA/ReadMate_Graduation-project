@@ -14,11 +14,18 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 String Email="";
+ String path="";
   Future<String> Extracttext()async{
     final result = await FilePicker.platform.pickFiles(allowMultiple: false);
     if (result == null) return "";
     final files = result.files;
-    final path = files.first.path.toString();
+    path = files.first.path.toString();
+    print(path);
+    PlatformFile file = result.files.first;
+
+    String name=file.name;
+    print("name");
+    print(name);
 // Assuming you have the PDF file as bytes
     final pdfFileBytes = await File(path.toString()).readAsBytes();
     final document = PdfDocument(inputBytes: pdfFileBytes);
@@ -28,6 +35,22 @@ String Email="";
     print(extractedText);
     return extractedText;
   }
+Future<String> ExtracttextReport()async{
+
+
+
+
+
+
+// Assuming you have the PDF file as bytes
+  final pdfFileBytes = await File(path.toString()).readAsBytes();
+  final document = PdfDocument(inputBytes: pdfFileBytes);
+// Extract the text from the PDF
+  final extractor = PdfTextExtractor(document);
+  final extractedText = extractor.extractText();
+  print(extractedText);
+  return extractedText;
+}
 Future<String> summarizeText(String text) async {
   var response;
     try{

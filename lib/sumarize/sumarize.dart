@@ -1,3 +1,5 @@
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -10,8 +12,9 @@ class sumarize extends StatefulWidget{
 }
 
 class _sumarizeState extends State<sumarize> {
-  String x="Summrize";
+  String x="summarized text";
   final TextEditingController texttController = TextEditingController();
+  bool isSummarized = true;
   @override
   Widget build(BuildContext context) {
 
@@ -28,7 +31,7 @@ class _sumarizeState extends State<sumarize> {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             Text(
-              "Summrization",
+              "Summarization",
               style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: MediaQuery.of(context).size.width * .08,
@@ -51,7 +54,7 @@ class _sumarizeState extends State<sumarize> {
                   child: TextFormField(
                     controller: texttController,
                     keyboardType: TextInputType.text,
-                     maxLines: null,
+                    maxLines: null,
                     decoration: InputDecoration(
                       hintText: "Insert text",
                       filled: true,
@@ -99,13 +102,13 @@ class _sumarizeState extends State<sumarize> {
                 top: MediaQuery.of(context).size.height*.02,
               ),
               width: double.infinity,
-              height: MediaQuery.of(context).size.height * 0.25,
+              height: MediaQuery.of(context).size.height * 0.37,
               decoration: BoxDecoration(
                 borderRadius: BorderRadiusDirectional.only(
-                    bottomStart: Radius.circular(20),
-                    bottomEnd: Radius.circular(20),
-                    topEnd: Radius.circular(20),
-                    topStart: Radius.circular(20),
+                  bottomStart: Radius.circular(20),
+                  bottomEnd: Radius.circular(20),
+                  topEnd: Radius.circular(20),
+                  topStart: Radius.circular(20),
                 ),
 
                 color: Color(0xFFD9D9D9),
@@ -115,40 +118,41 @@ class _sumarizeState extends State<sumarize> {
 
             ),
             SizedBox(
-              height: MediaQuery.of(context).size.height * 0.05,
+              height: MediaQuery.of(context).size.height * 0.02,
             ),
-            Container(
-              padding: EdgeInsetsDirectional.only(
+            ConditionalBuilder(
+              condition: isSummarized,
+              builder: (context){return Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                    color: Color(0xFF40B42E),
+                    borderRadius: BorderRadius.circular(20.0)),
+                child: MaterialButton(
+                  onPressed: ()async{
+                    print(texttController);
+                    setState(() {
+                      isSummarized=!isSummarized;
+                    });
+                    await summarizeText(texttController.text).then((value){
+                      x=value;
+                    });
+                    setState(() {
+                      isSummarized=!isSummarized;
+                    });
+                  },
+                  child: Text("Summarize",
+                    style: TextStyle(
+                        color: Colors.white
+                    ),
 
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadiusDirectional.all(Radius.circular(20)),
-                color: Colors.green,
-              ),
-
-              child: MaterialButton(onPressed: ()async{
-                   print(texttController);
-                 await summarizeText(texttController.text).then((value){
-                   x=value;
-                   print(x);
-                   x=value;
-                   setState(() {
-
-                   });
-
-                 });
-
-
-
-
-              },
-                child: Text("Summrization",
-                  style: TextStyle(
-                      color: Colors.white
                   ),
-
                 ),
-              ),
+              );},
+              fallback: (context) => Center(child: CircularProgressIndicator(
+                valueColor: AlwaysStoppedAnimation<Color>(
+                  Colors.green,
+                ),
+              )),
             )
 
           ],

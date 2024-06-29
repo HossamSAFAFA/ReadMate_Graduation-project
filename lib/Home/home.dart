@@ -116,19 +116,40 @@ class Home extends StatelessWidget{
                     ),
                      SizedBox(height: MediaQuery.of(context).size.height*.02,),
                     Container(
+                      decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(20), // This creates rounded corners
+                          border: Border.all(
+                            color: Colors.green, // Border color
+                            width: 1,           // Border width
+                          )),
                       height: MediaQuery.of(context).size.height*.2,
-                        child: Image.asset("assets/images/pdf.png")),
+                        child:MaterialButton(
+                          child:Image.asset("assets/images/report.jpg"),
+
+                            onPressed:(){
+                              ExtracttextReport().then((value){
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(builder: (context) => text_to_speech(value)),
+
+                                );
+                              });
+                            }
+                        )
+                    ),
+
                     SizedBox(height: MediaQuery.of(context).size.height*.01,),
                     Row (
                       children: [
                         Icon(Icons.picture_as_pdf,color: Colors.red,),
                        SizedBox(width:MediaQuery.of(context).size.width*.02),
-                        Text("diry of a wimpy kif"),
-      
+                        Text("report"),
+
                       ],
                     ) ,
                     Container(padding: EdgeInsetsDirectional.only(start:MediaQuery.of(context).size.width*.08),
-                        child: Text("recently viewed 1 day ago"))
+                        child: Text(""))
       
                   ],
                 ),
