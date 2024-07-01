@@ -186,7 +186,7 @@ class _text_to_speechState extends State<text_to_speech> {
 
                                         });
 
-                                         // Adjust volume
+                                        // Adjust volume
 
                                         await Future.delayed(Duration(seconds: 20));
 
@@ -349,10 +349,10 @@ class _text_to_speechState extends State<text_to_speech> {
       }
     });
 
-    }
+  }
   String cleanText(String text) {
     return text.replaceAll(RegExp(r'\s+'), ' ').trim();
-  }
+    }
 
 
 }
