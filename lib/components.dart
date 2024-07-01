@@ -55,7 +55,7 @@ Future<String> summarizeText(String text) async {
   var response;
     try{
        response = await http.post(
-        Uri.parse('http://192.168.1.13:8000/summarize'),
+        Uri.parse('http://192.168.1.7:8000/summarize'),
         headers: {
           HttpHeaders.contentTypeHeader: 'application/json',
         },
